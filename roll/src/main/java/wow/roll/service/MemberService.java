@@ -42,13 +42,16 @@ public class MemberService {
 
 	public List<Member> getAllMember() {
 		List<Member> mlist = new ArrayList<Member>();
-		memberRp.findAll().forEach(member -> mlist.add(member));
+		memberRp.findByRemovetag(0).forEach(member -> mlist.add(member));
 		return mlist;
 	}
 
 	public boolean delMembers(List<Member> memberList) {
 		try {
-			memberRp.delete(memberList);
+			for (int i = 0; i < memberList.size(); i++) {
+				memberList.get(i).setRemovetag(1);
+			}
+			memberRp.save(memberList);
 		} catch (Exception e) {
 
 			logger.error(e.toString());

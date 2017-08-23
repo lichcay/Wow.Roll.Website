@@ -42,6 +42,9 @@ public class Member implements Serializable {
 	private int rank;
 
 	@Column
+	private int epgp;
+
+	@Column
 	private String createtime;
 
 	@Column
@@ -112,6 +115,14 @@ public class Member implements Serializable {
 
 	public void setRank(int rank) {
 		this.rank = rank;
+	}
+
+	public int getEpgp() {
+		return epgp;
+	}
+
+	public void setEpgp(int epgp) {
+		this.epgp = epgp;
 	}
 
 	public String getCreatetime() {
