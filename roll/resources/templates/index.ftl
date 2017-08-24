@@ -67,7 +67,12 @@
 					var itemid=n["itemid"];
 					var bonuslists=n["bonuslists"];
 					var blist = bonuslists.substring(1,bonuslists.length-1).split(",");
-					var txt = "<tr><td>"+cname+"</td><td>"+ltime+"</td><td><a href='#'rel='item="+itemid+" transmog="+itemid+" bonus="+blist+"'></a></td></tr>"
+					var bliststr="";
+					for(var i=0;i<blist.length;i++){
+						bliststr=bliststr+blist[i]+":";
+					}
+					bliststr=bliststr.substr(0,bliststr.length);
+					var txt = "<tr><td>"+cname+"</td><td>"+ltime+"</td><td><a href='#'rel='item="+itemid+" transmog="+itemid+" bonus="+bliststr+"'></a></td></tr>"
 					$("#t1 tr:last").before(txt);
 					});
 		$WowheadPower.init();
@@ -144,7 +149,7 @@
 					<div class="vert-text">
 						<table id="t1">
 							<tr>
-							<td>人物</td>
+							<td width="150px">人物</td>
 							<td>掉落时间</td>
 							<td>掉落</td>
 							</tr>
@@ -153,7 +158,7 @@
 								<td>${loot.charactername}</td>
 								<td>${loot.loottimestamp?number?number_to_datetime}</td>
 								<td><a href="#"
-									rel="item=${loot.itemid} transmog=${loot.itemid} bonus=<#list (loot.bonuslists)?eval as bl>${bl?c}<#sep>,</#sep></#list>"></a>
+									rel="item=${loot.itemid} transmog=${loot.itemid} bonus=<#list (loot.bonuslists)?eval as bl>${bl?c}<#sep>:</#sep></#list>"></a>
 								</td>
 							</tr>
 							</#list>
