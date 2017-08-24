@@ -105,7 +105,7 @@ public class BattleNetApi {
 				ItemLoot loot = new ItemLoot();
 				loot.setId(Utils.getUUID());
 				loot.setCharactername(tmpdata.getString("character"));
-				loot.setLoottimestamp(tmpdata.getString("timestamp"));
+				loot.setLoottimestamp((Long.parseLong(tmpdata.getString("timestamp")) - 1000 * 3600) + "");
 				loot.setItemid(tmpdata.getString("itemId"));
 				loot.setContext(tmpdata.getString("context"));
 				loot.setBonuslists(tmpdata.getString("bonusLists"));

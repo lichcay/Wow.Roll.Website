@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import wow.roll.dao.ItemLootRepository;
@@ -59,8 +57,7 @@ public class ItemLootService {
 
 	public List<ItemLootView> getPageItemLootView(int page) {
 		int size = 20;
-		Sort sort = new Sort(Direction.DESC, "loottimestamp");
-		Pageable pageable = new PageRequest(page, size, sort);
+		Pageable pageable = new PageRequest(page, size);
 		Page<ItemLootView> lootlist = lootVRp.returnAllItemView(pageable);
 		return lootlist.getContent();
 	}

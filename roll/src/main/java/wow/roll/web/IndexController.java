@@ -29,7 +29,7 @@ public class IndexController {
 
 	@RequestMapping("/")
 	String index(Model model) {
-		List<ItemLootView> loots = itemLootService.getPageItemLootView(1);
+		List<ItemLootView> loots = itemLootService.getPageItemLootView(0);
 		model.addAttribute("loots", loots);
 		return "index";
 	}

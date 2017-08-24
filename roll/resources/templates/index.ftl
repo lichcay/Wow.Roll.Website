@@ -12,28 +12,18 @@
 <!-- Add custom CSS here -->
 <link href="css/slidefolio.css" rel="stylesheet">
 <!-- Font Awesome -->
+<link href="css/rollCSS.css" rel="stylesheet">
 <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
+<script src="js/jquery.js"></script>
 <script type="text/javascript" src="//wow.zamimg.com/widgets/power.js"></script>
+<script type="text/javascript" src="js/rollUtils.js"></script>
 <script>
 	var wowhead_tooltips = {
 		"colorlinks" : true,
 		"iconizelinks" : true,
 		"renamelinks" : true
 	}
-	var pageno=1;
-	
-	function timeStamp2String (time){
-        var datetime = new Date();
-         datetime.setTime(time);
-         var year = datetime.getFullYear();
-         var month = datetime.getMonth() + 1;
-         var date = datetime.getDate();
-         var hour = datetime.getHours();
-         var minute = datetime.getMinutes();
-         var second = datetime.getSeconds();
-         var mseconds = datetime.getMilliseconds();
-         return year + "-" + month + "-" + date+" "+hour+":"+minute+":"+second+"."+mseconds;
-};
+	var pageno=0;
 	
 	function getLootdata(pageno){
 		var rs;
@@ -78,28 +68,6 @@
 		$WowheadPower.init();
 	}
 </script>
-<style type="text/css">
-.wechat {
-	height: 50px;
-	cursor: pointer;
-	border-radius:5px;
-}
-
-.discord {
-	height: 50px;
-	cursor: pointer;
-	border-radius:5px;
-}
-.wechat:hover {
-	background:rgba(0, 0, 0, 0.50);
-}
-.discord:hover {
-	background:rgba(0, 0, 0, 0.50);
-}
-.about_us{
-	background:none;
-}
-</style>
 </head>
 <body>
 	<!-- Header Area -->
@@ -155,7 +123,7 @@
 							</tr>
 							<#list loots as loot>
 							<tr>
-								<td>${loot.charactername}</td>
+								<td class="wowclass${loot.cclass}">${loot.charactername}</td>
 								<td>${loot.loottimestamp?number?number_to_datetime}</td>
 								<td><a href="#"
 									rel="item=${loot.itemid} transmog=${loot.itemid} bonus=<#list (loot.bonuslists)?eval as bl>${bl?c}<#sep>:</#sep></#list>"></a>
@@ -184,7 +152,6 @@
 	<!-- /Footer -->
 	<!-- Bootstrap core JavaScript -->
 	<!-- Placed at the end of the document so the pages load faster -->
-	<script src="js/jquery.js"></script>
 	<script src="js/jquery-scrolltofixed-min.js"></script>
 	<script src="js/jquery.vegas.js"></script>
 	<script src="js/jquery.mixitup.min.js"></script>
@@ -256,7 +223,9 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#nav').scrollToFixed();
+			$WowheadPower.init();
 		});
+			
 	</script>
 	<!-- /Navbar-->
 

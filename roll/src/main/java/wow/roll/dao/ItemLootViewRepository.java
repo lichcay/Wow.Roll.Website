@@ -14,7 +14,7 @@ import wow.roll.domain.ItemLootView;
 // @Table(name = "roll_itemloots")
 @Qualifier("itemlootviewRepository")
 public interface ItemLootViewRepository extends CrudRepository<ItemLoot, String> {
-	@Query("select new wow.roll.domain.ItemLootView(t.id,t.charactername,m.cclass,t.loottimestamp,t.itemid,t.context,t.bonuslists) from ItemLoot t,Member m where t.charactername=m.name and t.removetag=0 and m.removetag=0")
+	@Query("select new wow.roll.domain.ItemLootView(t.id,t.charactername,m.cclass,t.loottimestamp,t.itemid,t.context,t.bonuslists) from ItemLoot t,Member m where t.charactername=m.name and t.removetag=0 and m.removetag=0 order by t.loottimestamp desc")
 	/*
 	 * public ItemLoot findItemLootByName(@Param("name") String name);
 	 * 
