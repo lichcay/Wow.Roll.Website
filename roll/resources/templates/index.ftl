@@ -53,6 +53,7 @@
 				data,function(i,n){
 					var cname=n["charactername"];
 					var ltime=n["loottimestamp"];
+					var cclass="wowclass"+n["cclass"];
 					ltime = timeStamp2String(ltime);
 					var itemid=n["itemid"];
 					var bonuslists=n["bonuslists"];
@@ -62,7 +63,7 @@
 						bliststr=bliststr+blist[i]+":";
 					}
 					bliststr=bliststr.substr(0,bliststr.length);
-					var txt = "<tr><td>"+cname+"</td><td>"+ltime+"</td><td><a href='#'rel='item="+itemid+" transmog="+itemid+" bonus="+bliststr+"'></a></td></tr>"
+					var txt = "<tr><td class='"+cclass+"'>"+cname+"</td><td>"+ltime+"</td><td><a href='#'rel='item="+itemid+" transmog="+itemid+" bonus="+bliststr+"'></a></td></tr>"
 					$("#t1 tr:last").before(txt);
 					});
 		$WowheadPower.init();
@@ -124,14 +125,14 @@
 							<#list loots as loot>
 							<tr>
 								<td class="wowclass${loot.cclass}">${loot.charactername}</td>
-								<td>${loot.loottimestamp?number?number_to_datetime}</td>
+								<td class='timestamp'>${loot.loottimestamp}</td>
 								<td><a href="#"
 									rel="item=${loot.itemid} transmog=${loot.itemid} bonus=<#list (loot.bonuslists)?eval as bl>${bl?c}<#sep>:</#sep></#list>"></a>
 								</td>
 							</tr>
 							</#list>
 							<tr>
-							<td colspan=3><div style="length:150;cursor:pointer;" onClick=loadLoot()>显示更多</div></td>
+							<td colspan=3><div style="width:150;cursor:pointer;" onClick=loadLoot()>显示更多</div></td>
 							</tr>
 						</table>
 					</div>
@@ -223,9 +224,15 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#nav').scrollToFixed();
+			//$WowheadPower.init();
+		});
+		$(window).load(function(){
+			$.each($(".timestamp"),function(i,n){
+				var txt = $(n).html();
+				$(n).html(timeStamp2String(txt));
+			});
 			$WowheadPower.init();
 		});
-			
 	</script>
 	<!-- /Navbar-->
 
