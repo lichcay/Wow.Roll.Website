@@ -81,7 +81,7 @@ public class HttpClientUtil {
 				InputStream instream = entity.getContent();
 				result = IOUtils.toString(instream, "UTF-8");
 			}
-			httpClient.close();
+			httpGet.releaseConnection();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
