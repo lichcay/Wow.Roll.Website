@@ -30,8 +30,11 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings("deprecation")
 public class HttpClientUtil {
 	private static PoolingHttpClientConnectionManager connMgr;
+
 	private static RequestConfig requestConfig;
+
 	private static final int MAX_TIMEOUT = 7000;
+
 	protected static Logger logger = LoggerFactory.getLogger(HttpClientUtil.class);
 
 	static {
@@ -54,8 +57,8 @@ public class HttpClientUtil {
 	}
 
 	static String doGetSSL(String apiUrl, Map<String, Object> params) {
-		CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(createSSLConnSocketFactory())
-				.setConnectionManager(connMgr).setDefaultRequestConfig(requestConfig).build();
+		CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(createSSLConnSocketFactory()).setConnectionManager(connMgr)
+				.setDefaultRequestConfig(requestConfig).build();
 		StringBuffer param = new StringBuffer();
 		int i = 0;
 		for (String key : params.keySet()) {
@@ -78,6 +81,7 @@ public class HttpClientUtil {
 				InputStream instream = entity.getContent();
 				result = IOUtils.toString(instream, "UTF-8");
 			}
+			httpClient.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
