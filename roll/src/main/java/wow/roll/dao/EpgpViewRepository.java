@@ -10,7 +10,7 @@ import wow.roll.domain.EpgpView;
 @Repository
 @Qualifier("epgpViewRepository")
 public interface EpgpViewRepository extends CrudRepository<EpgpView, String> {
-	@Query("select new wow.roll.domain.EpgpView(m.cclass, t.charactername, t.ep, t.gp, t.pr) from Epgp t, Member m where t.charactername=m.name and t.removetag=0 and m.removetag=0 group by t.id order by t.pr desc")
+	@Query("select new wow.roll.domain.EpgpView(m.cclass, t.charactername, t.ep, t.gp, t.pr) from Epgp t, Member m where t.charactername=m.name and m.rank<5 and t.removetag=0 and m.removetag=0 group by t.id order by t.pr desc")
 	public Iterable<EpgpView> findAllEpgpView();
 
 }
