@@ -66,3 +66,29 @@
 .wowclass12{
 	color:#A330C9;
 }
+
+.vert-text{
+    height: 484px;
+}
+.vert-text{
+    overflow: hidden;
+}
+.vert-text table{
+    position: relative; left: 0;
+}
+
+.vert-text table thead tr{
+    display:block;
+}
+
+.vert-text table tbody{
+    overflow-x: hidden;
+    overflow-y: scroll;
+    height:440px;
+    display:block;
+}
+
+ /* for Chrome */
+.vert-text table tbody::-webkit-scrollbar {
+    display: none;
+}

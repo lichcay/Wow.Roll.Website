@@ -29,7 +29,7 @@
 		var rs;
 		$.ajax({
 	        type: "POST",
-	        url: "/pageloot",
+	        url: "/roll/pageloot",
 	        contentType: "application/json; charset=utf-8",
 	        data: JSON.stringify({"pageno":pageno}),
 	        dataType: "json",
@@ -78,7 +78,8 @@
 				src="./img/roll_300_430.png" />
 			<ul class="list-inline">
 				<li><i><img class="wechat" src="./img/wechat.png" /></i></li>
-				<li><i><img class="discord" src="./img/discord.png" onClick = "javascript:window.open('https://discord.gg/ceCreXY');"/></i></li>
+				<li><i><img class="discord" src="./img/discord.png"
+						onClick="javascript:window.open('https://discord.gg/ceCreXY');" /></i></li>
 			</ul>
 		</div>
 	</div>
@@ -105,7 +106,6 @@
 								class="service-icon fa fa-envelope"></i>&nbsp;Contact</a></li>
 					</ul>
 				</div>
-				<!-- /.navbar-collapse -->
 			</div>
 		</nav>
 		<!-- /Navigation -->
@@ -116,11 +116,51 @@
 			<div class="row">
 				<div class="col-md-8 col-md-offset-2 text-center">
 					<div class="vert-text">
-						<table id="t1">
+						<table id="t2" style="width:470px;">
+							<thead>
 							<tr>
-							<td width="150px">人物</td>
-							<td>掉落时间</td>
-							<td>掉落</td>
+								<td width="150px">人物</td>
+								<td width="120px">EP</td>
+								<td width="100px">GP</td>
+								<td width="100px">PR</td>
+							</tr>
+							</thead>
+							<tbody>
+							<tr>
+								<td width="150px"></td>
+								<td width="120px"></td>
+								<td width="100px"></td>
+								<td width="100px"></td>
+							</tr>
+							<#list epgplist as epgp>
+							<tr>
+								<td class="wowclass${epgp.cclass}">${epgp.charactername}</td>
+								<td>${epgp.ep}</td>
+								<td>${epgp.gp}</td>
+								<td>${epgp.pr}</td>
+							</tr>
+							</#list>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-8 col-md-offset-2 text-center">
+					<div class="vert-text">
+						<table id="t1" style="width:650px;">
+						<thead>
+							<tr>
+								<td width="150px">人物</td>
+								<td width="140px">掉落时间</td>
+								<td width="350px">掉落</td>
+							</tr>
+							</thead>
+							<tbody>
+							<tr>
+								<td width="150px"></td>
+								<td width="140px"></td>
+								<td width="350px"></td>
 							</tr>
 							<#list loots as loot>
 							<tr>
@@ -134,6 +174,7 @@
 							<tr>
 							<td colspan=3><div style="width:150;cursor:pointer;" onClick=loadLoot()>显示更多</div></td>
 							</tr>
+							</tbody>
 						</table>
 					</div>
 				</div>

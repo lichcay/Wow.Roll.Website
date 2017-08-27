@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import wow.roll.domain.EpgpView;
 import wow.roll.domain.ItemLootView;
+import wow.roll.service.EpgpService;
 import wow.roll.service.ItemLootService;
 
 @Controller
@@ -27,10 +29,15 @@ public class IndexController {
 	@Autowired
 	private ItemLootService itemLootService;
 
+	@Autowired
+	private EpgpService epgpService;
+
 	@RequestMapping("/")
 	String index(Model model) {
 		List<ItemLootView> loots = itemLootService.getPageItemLootView(0);
+		List<EpgpView> epgplist = epgpService.getAllEpgpView();
 		model.addAttribute("loots", loots);
+		model.addAttribute("epgplist", epgplist);
 		return "index";
 	}
 
