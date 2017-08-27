@@ -29,7 +29,7 @@
 		var rs;
 		$.ajax({
 	        type: "POST",
-	        url: "/roll/pageloot",
+	        url: "/pageloot",
 	        contentType: "application/json; charset=utf-8",
 	        data: JSON.stringify({"pageno":pageno}),
 	        dataType: "json",
