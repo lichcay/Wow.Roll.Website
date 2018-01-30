@@ -8,13 +8,17 @@
 				%msg%n</pattern>
 		</encoder>
 	</appender>
-	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-		<file>roll.log</file>
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>/Tomcat/apache-tomcat-7.0.78/logs/roll-log.log</file>
 		<append>true</append>
 		<encoder>
 			<pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n
 			</pattern>
 		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>/Tomcat/apache-tomcat-7.0.78/logs/roll-log.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+        </rollingPolicy>
 	</appender>
 	<logger name="org.hibernate.SQL" level="DEBUG" />
     <logger name="org.hibernate.type" level="TRACE" />

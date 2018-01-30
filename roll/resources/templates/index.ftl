@@ -24,12 +24,27 @@
 		"renamelinks" : true
 	}
 	var pageno=0;
+	var epgppageno=0;
+	
+	$(function(){
+		var isguest = ${isGuest};
+		if(!isguest){
+			$($("#mobilemenu ul li")[1]).prepend("<img src='http://render-eu.worldofwarcraft.com/character/${default_character_avatar}' style='height:50px;display:block;float:left'></img>");
+			$($("#mobilemenu ul li")[1]).children().text("${bnaccount.battletag}");
+			$($("#mobilemenu ul li")[1]).children().attr("href","")
+			$("#loginbn").empty();
+			
+		}else{
+			$("#epgp_total").empty();
+			$("#epgp_details").empty();
+		}
+	})
 	
 	function getLootdata(pageno){
 		var rs;
 		$.ajax({
 	        type: "POST",
-	        url: "/roll/pageloot",
+	        url: "/pageloot",
 	        contentType: "application/json; charset=utf-8",
 	        data: JSON.stringify({"pageno":pageno}),
 	        dataType: "json",
@@ -40,6 +55,29 @@
 	        },
 	        error: function (message) {
 	        	pageno--;
+	        	rs = "error";
+	        	//alert("error");
+	        }
+	    });
+		return rs;
+	}
+	
+	function getEpgpdata(pageno){
+		var rs;
+		$.ajax({
+	        type: "POST",
+	        url: "/pageepgp",
+	        contentType: "application/json; charset=utf-8",
+	        data: JSON.stringify({"pageno":pageno}),
+	        dataType: "json",
+	        async:false,
+	        success: function (message) {
+	        	//alert("success");
+	           rs=message;
+	        },
+	        error: function (message) {
+	        	epgppageno--;
+	        	rs = "error";
 	        	//alert("error");
 	        }
 	    });
@@ -49,6 +87,9 @@
 	function loadLoot(){
 		pageno++;
 		var data = getLootdata(pageno);
+		if (data == "error"){
+			alert("server error");
+		}else{
 		$.each(
 				data,function(i,n){
 					var cname=n["charactername"];
@@ -67,6 +108,54 @@
 					$("#t1 tr:last").before(txt);
 					});
 		$WowheadPower.init();
+	}}
+	
+	function loadEpgp(){
+		epgppageno++;
+		var data = getEpgpdata(epgppageno);
+		if (data == "error"){
+			alert("server error");
+		}else{
+		$.each(
+				data,function(i,n){
+					var cname=n["charactername"];
+					var type=n["type"];
+					var reason=n["reason"];
+					var amount=n["amount"];
+					var timestamp=n["timestamp"]*1000;
+					var cclass="wowclass"+n["cclass"];
+					ltime = timeStamp2String(timestamp);
+					var txt = "<tr><td class='"+cclass+"'>"+cname+"</td><td>"+type+"</td><td>"+reason+"</td>";
+					if (type=="GP"){
+					var itemid=n["itemid"];
+					var bonusids=n["bonusids"];
+					var bliststr="";
+					if (bonusids!=""){
+					var blist = bonusids.substring(1,bonusids.length-1).split(",");
+					for(var i=0;i<blist.length;i++){
+						bliststr=bliststr+blist[i]+":";
+					}
+					bliststr=bliststr.substr(0,bliststr.length);
+					}
+					
+						txt = txt + "<td><a href='#'rel='item="+itemid+" transmog="+itemid+" bonus="+bliststr+"'></a></td>"
+					}else{
+						txt = txt + "<td></td>";
+					}
+					if ((amount<0)||(type=="GP")){
+						txt = txt + "<td style='color:red'>"+amount+"</td><td>"+ltime+"</td></tr>"
+					}else{
+						txt = txt + "<td style='color:limegreen'>"+amount+"</td><td>"+ltime+"</td></tr>"
+					}
+					
+					$("#t3 tr:last").before(txt);
+					});
+		$WowheadPower.init();
+		}
+	}
+	
+	function navi_to_bn(){
+		window.location.replace("https://eu.battle.net/oauth/authorize?client_id=czbvpfc8pcpms7m22k53r2h8vxht2a3y&client_secret=GHyDDrGjeKzXUdF824cqBaCEhBYn6h3h&redirect_uri=https%3a%2f%2fwowshroll.online%2foauth2callback&response_type=code&scope=wow.profile");
 	}
 </script>
 </head>
@@ -80,6 +169,10 @@
 				<li><i><img class="wechat" src="./img/wechat.png" /></i></li>
 				<li><i><img class="discord" src="./img/discord.png"
 						onClick="javascript:window.open('https://discord.gg/ceCreXY');" /></i></li>
+			</ul>
+			<ul class="list-inline" id="loginbn">
+				<li style="cursor: pointer;" onClick="navi_to_bn()">Login with
+					Battlenet Account</li>
 			</ul>
 		</div>
 	</div>
@@ -101,9 +194,9 @@
 
 					<ul class="nav navbar-nav navbar-right text-center">
 						<li><a href="#top"><i class="service-icon fa fa-home"></i>&nbsp;Home</a></li>
-						<li><a href="#about"><i class="service-icon fa fa-info"></i>&nbsp;About</a></li>
-						<li><a href="#contact"><i
-								class="service-icon fa fa-envelope"></i>&nbsp;Contact</a></li>
+						<li><a
+							href="https://eu.battle.net/oauth/authorize?client_id=czbvpfc8pcpms7m22k53r2h8vxht2a3y&client_secret=GHyDDrGjeKzXUdF824cqBaCEhBYn6h3h&redirect_uri=https%3a%2f%2fwowshroll.online%2foauth2callback&response_type=code&scope=wow.profile"
+							style="float: right;">Login</a></li>
 					</ul>
 				</div>
 			</div>
@@ -113,33 +206,33 @@
 	<!-- About -->
 	<div id="about" class="about_us">
 		<div class="container">
-			<div class="row">
+			<div class="row" id="epgp_total">
 				<div class="col-md-8 col-md-offset-2 text-center">
 					<div class="vert-text">
-						<table id="t2" style="width:470px;">
+						<table id="t2" style="width: 470px;">
 							<thead>
-							<tr>
-								<td width="150px">人物</td>
-								<td width="120px">EP</td>
-								<td width="100px">GP</td>
-								<td width="100px">PR</td>
-							</tr>
+								<tr>
+									<td width="150px">人物</td>
+									<td width="120px">EP</td>
+									<td width="100px">GP</td>
+									<td width="100px">PR</td>
+								</tr>
 							</thead>
 							<tbody>
-							<tr>
-								<td width="150px"></td>
-								<td width="120px"></td>
-								<td width="100px"></td>
-								<td width="100px"></td>
-							</tr>
-							<#list epgplist as epgp>
-							<tr>
-								<td class="wowclass${epgp.cclass}">${epgp.charactername}</td>
-								<td>${epgp.ep}</td>
-								<td>${epgp.gp}</td>
-								<td>${epgp.pr}</td>
-							</tr>
-							</#list>
+								<tr>
+									<td width="150px"></td>
+									<td width="120px"></td>
+									<td width="100px"></td>
+									<td width="100px"></td>
+								</tr>
+								<#list epgplist as epgp>
+								<tr>
+									<td class="wowclass${epgp.cclass}">${epgp.charactername}</td>
+									<td>${epgp.ep}</td>
+									<td>${epgp.gp}</td>
+									<td>${epgp.pr}</td>
+								</tr>
+								</#list>
 							</tbody>
 						</table>
 					</div>
@@ -148,35 +241,82 @@
 			<div class="row">
 				<div class="col-md-8 col-md-offset-2 text-center">
 					<div class="vert-text">
-						<table id="t1" style="width:650px;">
-						<thead>
-							<tr>
-								<td width="150px">人物</td>
-								<td width="140px">掉落时间</td>
-								<td width="350px">掉落</td>
-							</tr>
+						<table id="t1" style="width: 650px;">
+							<thead>
+								<tr>
+									<td width="150px">人物</td>
+									<td width="140px">掉落时间</td>
+									<td width="350px">掉落</td>
+								</tr>
 							</thead>
 							<tbody>
-							<tr>
-								<td width="150px"></td>
-								<td width="140px"></td>
-								<td width="350px"></td>
-							</tr>
-							<#list loots as loot>
-							<tr>
-								<td class="wowclass${loot.cclass}">${loot.charactername}</td>
-								<td class='timestamp'>${loot.loottimestamp}</td>
-								<td><a href="#"
-									rel="item=${loot.itemid} transmog=${loot.itemid} bonus=<#list (loot.bonuslists)?eval as bl>${bl?c}<#sep>:</#sep></#list>"></a>
-								</td>
-							</tr>
-							</#list>
-							<tr>
-							<td colspan=3><div style="width:150;cursor:pointer;" onClick=loadLoot()>显示更多</div></td>
-							</tr>
+								<tr>
+									<td width="150px"></td>
+									<td width="140px"></td>
+									<td width="350px"></td>
+								</tr>
+								<#list loots as loot>
+								<tr>
+									<td class="wowclass${loot.cclass}">${loot.charactername}</td>
+									<td class='timestamp'>${loot.loottimestamp}</td>
+									<td><a href="#"
+										rel="item=${loot.itemid} transmog=${loot.itemid} bonus=<#list (loot.bonuslists)?eval as bl>${bl?c}<#sep>:</#sep></#list>"></a>
+									</td>
+								</tr>
+								</#list>
+								<tr>
+									<td colspan=3><div style="width: 150; cursor: pointer;"
+											onClick=loadLoot()>显示更多</div></td>
+								</tr>
 							</tbody>
 						</table>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row" id="epgp_details">
+			<div class="col-md-8 col-md-offset-2 text-center">
+				<div class="vert-text">
+					<table id="t3" style="width: 1020px;">
+						<thead>
+							<tr>
+								<td width="150px">人物</td>
+								<td width="80px">类型</td>
+								<td width="200px">原因</td>
+								<td width="350px">装备</td>
+								<td width="100px">数量</td>
+								<td width="140px">时间</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td width="150px"></td>
+								<td width="80px"></td>
+								<td width="200px"></td>
+								<td width="350px"></td>
+								<td width="100px"></td>
+								<td width="140px"></td>
+							</tr>
+							<#list epgploglist as epgplog>
+							<tr>
+								<td class="wowclass${epgplog.cclass}">${epgplog.charactername}</td>
+								<td>${epgplog.type}</td>
+								<td>${epgplog.reason}</td>
+								<td><#if epgplog.type=="GP"> <a href="#"
+										rel="item=${epgplog.itemid} transmog=${epgplog.itemid} bonus=<#list (epgplog.bonusids)?eval as bl>${bl?c}<#sep>:</#sep></#list>"></a></#if>
+								</td>
+								<td <#if (((epgplog.amount?eval)<0)||(epgplog.type=="GP")) >style="color:red"<#else>style="color:limegreen"</#if>>${epgplog.amount}</td>
+								<td class='timestamp'>${epgplog.timestamp}000</td>
+							</tr>
+							</#list>
+							<tr>
+								<td colspan=6><div style="width: 150; cursor: pointer;"
+										onClick=loadEpgp()>显示更多</div></td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>

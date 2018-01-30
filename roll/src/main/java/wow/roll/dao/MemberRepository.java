@@ -17,6 +17,11 @@ public interface MemberRepository extends CrudRepository<Member, String> {
 	@Query("select t from Member t where t.name=:name and t.removetag=0")
 	public Member findMemberByName(@Param("name") String name);
 
+	@Query("select t from Member t where t.name=:name")
+	public Member findMemberByNameIncludeRemoved(@Param("name") String name);
+
 	public Iterable<Member> findByRemovetag(int tag);
+
+	public Iterable<Member> findByBnaccountid(String id);
 
 }

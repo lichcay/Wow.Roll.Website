@@ -14,13 +14,19 @@
 Paste epgp json here:<input id="epgp_json" name="epgp_json" type="text">
 <button onClick="submit()">Submit</button>
 </div>
+<form action="/admin/uploadEpgpDB" method="post" enctype="multipart/form-data">
+<div>
+Upload epgp db file here:<input id="epgp_db" name="epgp_db" type="file">
+<input type="submit" value="Submit">
+</div>
+</form>
 </body>
 <script>
 function submit(){
 	var epgp_json = $("#epgp_json").val();
 	$.ajax({
         type: "POST",
-        url: "/roll/admin/uploadEpgp",
+        url: "/admin/uploadEpgp",
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify({"epgp":epgp_json}),
         dataType: "json",

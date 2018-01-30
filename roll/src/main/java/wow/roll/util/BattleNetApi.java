@@ -31,8 +31,14 @@ public class BattleNetApi {
 	@Value("${api.key}")
 	private static String apiKey = "czbvpfc8pcpms7m22k53r2h8vxht2a3y";
 
+	@Value("${api.secret}")
+	private static String apiSecret = "GHyDDrGjeKzXUdF824cqBaCEhBYn6h3h";
+
 	@Value("${url.guildprofile}")
 	private static String guildProfileUrl = "https://eu.api.battle.net/wow/guild/";
+
+	@Value("${url.getoauth2accesstoken}")
+	private static String getoauth2accesstokenurl = "https://eu.battle.net/oauth/token";
 
 	@Value("${guild.name}")
 	private static String guildName = "R O L L";
@@ -73,7 +79,7 @@ public class BattleNetApi {
 			m.setLevel(memberJ.getIntValue("level"));
 			m.setThumbnail(memberJ.getString("thumbnail"));
 			m.setRank(rank);
-			m.setEpgp(0);
+			m.setBnaccountid("");
 			m.setCreatetime((new Date()).toString());
 			m.setEdittime(m.getCreatetime());
 			m.setRemovetag(0);
@@ -116,6 +122,52 @@ public class BattleNetApi {
 			}
 		}
 		return itemlootList;
+	}
+
+	public static String getOauth2AccessToken(String code) {
+		String apiUrl = getoauth2accesstokenurl;
+		String grant_type = "authorization_code";
+		String redirect_uri = "https://wowshroll.online/oauth2callback";
+		logger.debug(apiUrl);
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("code", code);
+		params.put("grant_type", grant_type);
+		params.put("redirect_uri", redirect_uri);
+		String rsp = HttpClientUtil.oAuth_token(apiKey, apiSecret, apiUrl, params);
+		String access_token = JSON.parseObject(rsp).getString("access_token");
+		return access_token;
+	}
+
+	public static Map<String, String> getAccount(String token) {
+		String apiUrl = "https://eu.api.battle.net/account/user";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("access_token", token);
+		String rsp = HttpClientUtil.doGetSSL(apiUrl, params);
+		JSONObject jsonrsp = JSON.parseObject(rsp);
+		String battleTag = jsonrsp.getString("battletag");
+		String btId = jsonrsp.getString("id");
+		Map<String, String> account = new HashMap<String, String>();
+		account.put("battletag", battleTag);
+		account.put("btid", btId);
+		return account;
+	}
+
+	public static List<String> getAccountCharacters(String token) {
+		String apiUrl = "https://eu.api.battle.net/wow/user/characters";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("access_token", token);
+		String rsp = HttpClientUtil.doGetSSL(apiUrl, params);
+		JSONObject jsonrsp = JSON.parseObject(rsp);
+		JSONArray characters = jsonrsp.getJSONArray("characters");
+		List<String> characterList = new ArrayList<String>();
+		for (int i = 0; i < characters.size(); i++) {
+			String characterGuild = characters.getJSONObject(i).getString("guild");
+			if (StringUtils.equals(characterGuild, guildName)) {
+				String characterName = characters.getJSONObject(i).getString("name");
+				characterList.add(characterName);
+			}
+		}
+		return characterList;
 	}
 
 	private static Map<String, Object> paramsGen(String fields) {

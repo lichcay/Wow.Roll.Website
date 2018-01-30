@@ -68,9 +68,9 @@ public class EpgpService {
 		return epgpPage.getContent();
 	}
 
-	public List<EpgpView> getAllEpgpView() {
+	public List<EpgpView> getAllEpgpView(int rank) {
 		List<EpgpView> epgplist = new ArrayList<EpgpView>();
-		epgpViewRp.findAllEpgpView().forEach(epgp -> epgplist.add(epgp));
+		epgpViewRp.findAllEpgpView(rank).forEach(epgp -> epgplist.add(epgp));
 		return epgplist;
 	}
 }
