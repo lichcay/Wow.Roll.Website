@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.StringUtils;
+
 @Entity
 @Table(name = "roll_epgplog")
 public class EpgpLog implements Serializable {
@@ -124,5 +126,14 @@ public class EpgpLog implements Serializable {
 
 	public void setRemovetag(int removetag) {
 		this.removetag = removetag;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		EpgpLog log = (EpgpLog) obj;
+		boolean rst = StringUtils.equals(this.amount, log.amount) && StringUtils.equals(this.gear, log.gear)
+				&& StringUtils.equals(this.memberid, log.memberid) && StringUtils.equals(this.reason, log.reason)
+				&& StringUtils.equals(this.timestamp, log.timestamp) && StringUtils.equals(this.type, log.type);
+		return rst;
 	}
 }

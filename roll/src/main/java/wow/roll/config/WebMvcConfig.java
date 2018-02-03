@@ -20,4 +20,5 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 		registry.addInterceptor(localInterceptor()).addPathPatterns("/**");
 		super.addInterceptors(registry);
 	}
+
 }

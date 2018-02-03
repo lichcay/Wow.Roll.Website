@@ -204,7 +204,7 @@ public class AdminController {
 		return epgpLogList;
 	}
 
-	private Map<String, String> parseLuaDB(String luaDB) {
+	private static Map<String, String> parseLuaDB(String luaDB) {
 		int n = 0;
 		Map<String, String> luaMap = new HashMap<String, String>();
 		while (n < luaDB.length()) {
@@ -260,5 +260,31 @@ public class AdminController {
 			}
 		}
 		return luaMap;
+	}
+
+	public static void main(String args[]) {
+		String rst = "--[3940]{1517612580,--[1]\"GP\",--[2]\"Sociàl-ShatteredHand\",--[3]\"|cffa335ee|Hitem:151944::::::::110:105::6:3:3612:1512:3336:::|h[Soulhunter'sCowl]|h|r\",--[4]1337,--[5]";
+		String[] tmplog = rst.substring(1, rst.length()).split(",--");
+		EpgpLog log = new EpgpLog();
+		log.setId(Utils.getUUID());
+		String timestamp = tmplog[0].split("\\{")[1];
+		log.setTimestamp(timestamp);
+		String type = tmplog[1].substring(3, tmplog[1].length()).replaceAll("\"", "");
+		log.setType(type);
+		if (StringUtils.equals(type, "EP")) {
+			log.setReason(tmplog[3].substring(3, tmplog[3].length()).replaceAll("\"", ""));
+			log.setGear("");
+		} else {
+			log.setGear(tmplog[3].substring(3, tmplog[3].length()).replaceAll("\"", ""));
+			log.setReason("");
+		}
+		log.setAmount(tmplog[4].substring(3, tmplog[4].length()).replaceAll("\"", ""));
+		log.setCreatetime((new Date()).toString());
+		log.setEdittime(log.getCreatetime());
+		log.setRemovetag(0);
+		String memberNameWithServer = tmplog[2].substring(3, tmplog[2].length()).replaceAll("\"", "");
+		String memberName = memberNameWithServer.split("-")[0];
+		System.out.println("123");
+		// List<EpgpLog> epgpLog = luaDBHelp(epgpDetails);
 	}
 }

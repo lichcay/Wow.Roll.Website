@@ -35,6 +35,8 @@ public class EpgpLogService {
 				cacheEpgp = epgpLogRp.findEpgpLogByMemberIdAndTimestamp(epgp.getMemberid(), epgp.getTimestamp());
 				if (cacheEpgp == null) {
 					epgpLogRp.save(epgp);
+				} else if (!cacheEpgp.equals(epgp)) {
+					epgpLogRp.save(epgp);
 				}
 			}
 			return true;
